@@ -16,6 +16,8 @@
 #
 import webapp2
 import cgi
+from caesar import encrypt
+
 
 caesar_form = """
 <!DOCTYPE html>
@@ -29,10 +31,16 @@ caesar_form = """
     <h2>Enter your text into Caesar:</h2>
     <form method="post">
         <textarea name="text"
-                 style="height: 150px; width: 400px;">%s</textarea>
+                 style="height: 150px; width: 400px;"></textarea>
+    <div>
+        <label for='rot'>...and rotate by:</label>
+        <input type='text' name='rot' value='0'</div>
+        <p class='error'></p>
     <br>
     <input type = "submit">
     </form>
+
+
 
 </body>
 
