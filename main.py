@@ -31,10 +31,10 @@ caesar_form = """
     <h2>Enter your text into Caesar:</h2>
     <form method="post">
         <textarea name="text"
-                 style="height: 150px; width: 400px;"></textarea>
+                 style="height: 150px; width: 400px;">%(txt)s</textarea>
     <div>
         <label for='rot'>...and rotate by:</label>
-        <input type='text' name='rot' value='0'</div>
+        <input type='text' name='rot' value='%(rot_num)s'</div>
         <p class='error'></p>
     <br>
     <input type = "submit">
@@ -47,15 +47,26 @@ caesar_form = """
 </html>
 """
 
-class Caesar(webapp2.RequestHandler):
+class CaesarHandler(webapp2.RequestHandler):
+    def write_form(self, txt="", rot_num=""):
+        txt= cgi.escape(txt, quote = True)
+        self.response.out.write(caesar_form % {"txt" : txt, "rot_num": rot_num})
+
     def get(self):
-        self.response.out.write(caesar_form%txt)
+        self.write_form()
 
 
-class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write('Hello world!')
+
+    def post(self):
+        txt= self.request.get("txt")
+        #txt= cgi.escape(self.request.get("txt"), quote = True)
+        rot_num= self.request.get("rot_num")
+        rot_txt= encrypt (txt, int(rot_num))
+        self.write_form(rot_txt, rot_num)
+
+
+
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', CaesarHandler)
 ], debug=True)
