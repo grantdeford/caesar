@@ -18,7 +18,7 @@ import webapp2
 import cgi
 from caesar import encrypt
 
-
+# issue with both caesar.py and directory named caesar for import????maybe rename caesar1.py
 caesar_form = """
 <!DOCTYPE html>
 
@@ -33,9 +33,10 @@ caesar_form = """
         <textarea name="text"
                  style="height: 150px; width: 400px;">%(txt)s</textarea>
     <div>
-        <label for='rot'>...and rotate by:</label>
-        <input type='text' name='rot' value='%(rot_num)s'</div>
-        <p class='error'></p>
+        <label for = "rot">...and rotate by:</label>
+        <input type = "text" name = "rot" value = "%(rot_num)s"</div>
+        <p class = "error"></p>
+
     <br>
     <input type = "submit">
     </form>
@@ -46,11 +47,16 @@ caesar_form = """
 
 </html>
 """
+#/label at end of input type?
+#value for textarea %(txt)s?
+#just make a function for htmlescape = cgi.escape(s, quote = True)?example Uda redirect
+def escape_html(s):
+    return cgi.escape(s, quote = True)
 
 class CaesarHandler(webapp2.RequestHandler):
     def write_form(self, txt="", rot_num=""):
-        txt= cgi.escape(txt, quote = True)
-        self.response.out.write(caesar_form % {"txt" : txt, "rot_num": rot_num})
+        #txt= cgi.escape(txt, quote = True)
+        self.response.out.write(caesar_form % {"txt" : escape_html(txt), "rot_num": rot_num})
 
     def get(self):
         self.write_form()
@@ -58,12 +64,12 @@ class CaesarHandler(webapp2.RequestHandler):
 
 
     def post(self):
-        txt= self.request.get("txt")
-        #txt= cgi.escape(self.request.get("txt"), quote = True)
-        rot_num= self.request.get("rot_num")
-        rot_txt= encrypt (txt, int(rot_num))
+        txt = self.request.get("txt")
+        #txt = cgi.escape(self.request.get("txt"), quote = True)
+        rot_num = self.request.get("rot_num")
+        rot_txt = encrypt(txt, int(rot_num))
         self.write_form(rot_txt, rot_num)
-
+#just rot_txt in return
 
 
 
