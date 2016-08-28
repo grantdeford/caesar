@@ -57,7 +57,8 @@ def escape_html(s):
 class CaesarHandler(webapp2.RequestHandler):
     def write_form(self, txt="", rot_num=""):
         #txt= cgi.escape(txt, quote = True)
-        self.response.out.write(caesar_form % {"txt" : txt, "rot_num": rot_num})
+        self.response.out.write(caesar_form % {"txt" : escape_html(txt),
+        "rot_num": rot_num})
 
     def get(self):
         self.write_form()
@@ -65,11 +66,12 @@ class CaesarHandler(webapp2.RequestHandler):
 
 
     def post(self):
-        txt = escape_html(self.request.get("txt"))
+        txt = self.request.get("text")
         #txt = cgi.escape(self.request.get("txt"), quote = True)
-        rot_num = self.request.get("rot_num")
-        #rot_txt = encrypt(txt,int(rot_num))
-        rot_txt = encrypt(txt, rot_num)
+        #have to request.get the name' from html above-originally had value
+        rot_num = self.request.get("rot")
+        #getting int and str error from appengine must int?rot
+        rot_txt = encrypt(txt, int(rot_num))
         self.write_form(rot_txt, rot_num)
         #self.write_form(rot_txt, rot_num)
 #just rot_txt in return
